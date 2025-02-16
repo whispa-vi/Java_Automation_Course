@@ -1,1 +1,1 @@
-# Java_Automation_Chursov
+# Java_Automation_Course
