@@ -6,12 +6,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("Delivery Cost Calculation")
 @Feature("Cost Calculation Functionality")
-@Story("User calculates delivery cost")
 public class CalculateDeliveryUnitTests {
 
     @ParameterizedTest
-    @DisplayName("Parameterized test for different distances and package sizes")
-    @Description("Runs multiple test cases for various distances, package sizes, and service loads.")
+    @DisplayName("Check different distances and package sizes")
+    @Description("Positive tests")
     @CsvSource({
             "5, small, false, , 400.0",
             "10, large, false, increased, 400.0",
@@ -29,7 +28,7 @@ public class CalculateDeliveryUnitTests {
 
     @Test
     @Tag("smoke")
-    @DisplayName("Should return minimum price when calculated cost is lower than minimum")
+    @DisplayName("Check return min price when calculated cost is < than min")
     @Description("Ensures that the minimum delivery price of 400.0 is applied when calculated cost is below it.")
     @Severity(SeverityLevel.CRITICAL)
     void shouldReturnMinimumPriceWhenCostIsLow() {
@@ -40,7 +39,7 @@ public class CalculateDeliveryUnitTests {
     }
 
     @Test
-    @DisplayName("Should throw exception when fragile item distance exceeds 30 km")
+    @DisplayName("Check throw exception when fragile item distance > 30 km")
     @Description("Verifies that an exception is thrown if a fragile item is delivered beyond 30 km.")
     @Severity(SeverityLevel.BLOCKER)
     void shouldThrowExceptionForFragileItemsAbove30km() {
@@ -52,7 +51,7 @@ public class CalculateDeliveryUnitTests {
     }
 
     @Test
-    @DisplayName("Should calculate cost correctly for large package, 15 km, high load")
+    @DisplayName("Check calculate cost correctly for large package, 15 km, high load")
     @Description("Tests delivery cost calculation for a large package at 15 km distance with high load.")
     @Severity(SeverityLevel.NORMAL)
     void shouldCalculateCorrectCost() {
@@ -64,8 +63,8 @@ public class CalculateDeliveryUnitTests {
 
     @Disabled
     @ParameterizedTest
-    @DisplayName("Should throw exception when parameters are missing")
-    @Description("Checks behavior when some parameters are missing.")
+    @DisplayName("Check throw exception when parameters are missing")
+    @Description("Negative tests")
     @CsvSource({
             ", small, false, high, 400",   // if distance null
             "10, , false, high",      // if packageSize null
