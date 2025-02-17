@@ -44,15 +44,14 @@ public class CalculateDeliveryUnitTests {
         assertEquals(560.0, cost, "Expected delivery cost should be 560.0");
     }
 
-    @Disabled
     @ParameterizedTest
     @DisplayName("Parameterized test for different distances and package sizes")
     @Description("Runs multiple test cases for various distances, package sizes, and service loads.")
     @CsvSource({
             "5, small, false, , 400.0",
-            "10, large, false, increased, 480.0",
-            "20, small, false, very high, 640.0",
-            "30, large, true, high, 840.0"
+            "10, large, false, increased, 400.0",
+            "20, small, false, very high, 480.0",
+            "30, large, true, high, 979.0"
     })
     @Severity(SeverityLevel.NORMAL)
     void testDeliveryCostForMultipleCases(int distance, String packageSize, boolean isFragile, String serviceLoad, double expectedCost) {

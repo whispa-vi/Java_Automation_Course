@@ -46,7 +46,7 @@ public class CalculateDelivery {
 
     public static void main(String[] args) {
         try {
-            double cost = calculateDeliveryCost(20, "small", true, "");
+            double cost = calculateDeliveryCost(30, "large", true, "high");
             System.out.println("Delivery cost = " + cost);
         } catch (IllegalArgumentException e) {
             System.out.println("Attention error: " + e.getMessage());
