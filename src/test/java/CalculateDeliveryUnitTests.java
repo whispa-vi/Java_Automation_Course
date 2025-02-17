@@ -9,6 +9,24 @@ import static org.junit.jupiter.api.Assertions.*;
 @Story("User calculates delivery cost")
 public class CalculateDeliveryUnitTests {
 
+    @ParameterizedTest
+    @DisplayName("Parameterized test for different distances and package sizes")
+    @Description("Runs multiple test cases for various distances, package sizes, and service loads.")
+    @CsvSource({
+            "5, small, false, , 400.0",
+            "10, large, false, increased, 400.0",
+            "20, small, false, very high, 480.0",
+            "30, large, true, high, 979.0"
+    })
+    @Severity(SeverityLevel.NORMAL)
+    void testDeliveryCostForMultipleCases(int distance, String packageSize, boolean isFragile, String serviceLoad, double expectedCost) {
+        Allure.step(String.format("Calling calculateDeliveryCost with distance=%d, packageSize=%s, isFragile=%b, serviceLoad=%s",
+                distance, packageSize, isFragile, serviceLoad));
+        double actualCost = CalculateDelivery.calculateDeliveryCost(distance, packageSize, isFragile, serviceLoad);
+        Allure.step("Verifying that the expected cost matches the actual cost");
+        assertEquals(expectedCost, actualCost, "Unexpected delivery cost");
+    }
+
     @Test
     @Tag("smoke")
     @DisplayName("Should return minimum price when calculated cost is lower than minimum")
@@ -42,24 +60,6 @@ public class CalculateDeliveryUnitTests {
         double cost = CalculateDelivery.calculateDeliveryCost(15, "large", false, "high");
         Allure.step("Verifying that the expected cost is 560.0");
         assertEquals(560.0, cost, "Expected delivery cost should be 560.0");
-    }
-
-    @ParameterizedTest
-    @DisplayName("Parameterized test for different distances and package sizes")
-    @Description("Runs multiple test cases for various distances, package sizes, and service loads.")
-    @CsvSource({
-            "5, small, false, , 400.0",
-            "10, large, false, increased, 400.0",
-            "20, small, false, very high, 480.0",
-            "30, large, true, high, 979.0"
-    })
-    @Severity(SeverityLevel.NORMAL)
-    void testDeliveryCostForMultipleCases(int distance, String packageSize, boolean isFragile, String serviceLoad, double expectedCost) {
-        Allure.step(String.format("Calling calculateDeliveryCost with distance=%d, packageSize=%s, isFragile=%b, serviceLoad=%s",
-                distance, packageSize, isFragile, serviceLoad));
-        double actualCost = CalculateDelivery.calculateDeliveryCost(distance, packageSize, isFragile, serviceLoad);
-        Allure.step("Verifying that the expected cost matches the actual cost");
-        assertEquals(expectedCost, actualCost, "Unexpected delivery cost");
     }
 
     @Disabled
