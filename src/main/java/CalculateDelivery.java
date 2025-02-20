@@ -1,56 +1,55 @@
-public class CalculateDelivery {
+import java.text.DecimalFormat;
 
-    private static final double MIN_DELIVERY_PRICE = 400.0;
+/**
+ * Class for imitating a work of delivery service with calculating a final cost by delivery parameters
+ */
+public class CalculateDelivery{
+    public static final double MINIMUM_DELIVERY_AMOUNT = 400;
 
-    public static double calculateDeliveryCost(int distanceToPoint, String packageSize, boolean isFragile, String serviceLoad) {
-        int price = 0;
+    private final int destinationDistance;
+    private final CargoDimension cargoDimensions;
+    private final boolean isFragile;
+    private final ServiceLoad deliveryServiceLoad;
 
-        if (distanceToPoint > 30) {
-            if (isFragile) {
-                throw new IllegalArgumentException("Fragile items cannot be delivered beyond 30 km");
-            }
-            price += 300;
-        } else if (distanceToPoint <= 30 && distanceToPoint > 10) {
-            price += 200;
-        } else if (distanceToPoint <= 10 && distanceToPoint > 2) {
-            price += 100;
-        } else {
-            price += 50; // distance <= 2
-        }
-
-        if ("large".equalsIgnoreCase(packageSize)) {
-            price += 200;
-        } else if ("small".equalsIgnoreCase(packageSize)) {
-            price += 100;
-        } else {
-            throw new IllegalArgumentException("Wrong value for packageDimensions");
-        }
-
-        if (isFragile) {
-            price += 300;
-        }
-
-        double loadCoefficient = 1.0;
-        if ("very high".equalsIgnoreCase(serviceLoad)) {
-            loadCoefficient = 1.6;
-        } else if ("high".equalsIgnoreCase(serviceLoad)) {
-            loadCoefficient = 1.4;
-        } else if ("increased".equalsIgnoreCase(serviceLoad)) {
-            loadCoefficient = 1.2;
-        };
-
-        price *= (double) loadCoefficient;
-
-        return Math.max(price, MIN_DELIVERY_PRICE);
+    public CalculateDelivery(int destinationDistance, CargoDimension cargoDimensions, boolean isFragile, ServiceLoad deliveryServiceLoad) {
+        this.destinationDistance = destinationDistance;
+        this.cargoDimensions = cargoDimensions;
+        this.isFragile = isFragile;
+        this.deliveryServiceLoad = deliveryServiceLoad;
     }
 
-    public static void main(String[] args) {
-        try {
-            double cost = calculateDeliveryCost(30, "large", true, "high");
-            System.out.println("Delivery cost = " + cost);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Attention error: " + e.getMessage());
-        }
+    /**
+     * Returns delivery cost or an error, if there are wrong input
+     * @return calculated cost or default if calculated is less than 400
+     */
+    public double calculateDeliveryCost() {
+        if (this.isFragile && this.destinationDistance > 30)
+            throw new UnsupportedOperationException("Fragile cargo cannot be delivered for the distance more than 30");
+
+        double calculatedDeliveryCost = (getDestinationDistanceCostIncrease(this.destinationDistance) + this.cargoDimensions.getCostIncrease() + getFragileCostIncrease(this.isFragile)) * this.deliveryServiceLoad.getDeliveryRate();
+        DecimalFormat df = new DecimalFormat("###");
+        return Math.max(Double.parseDouble(df.format(calculatedDeliveryCost)), MINIMUM_DELIVERY_AMOUNT);
     }
 
+    /**
+     * Returns additional cost based on the destination distance
+     * @param destinationDistance - distance to the target
+     * @return calculated cost
+     */
+    private int getDestinationDistanceCostIncrease(int destinationDistance) {
+        if (destinationDistance > 30) return 300;
+        if (destinationDistance > 10) return 200;
+        if (destinationDistance > 2) return 100;
+        if (destinationDistance >= 0) return 50;
+        throw new IllegalArgumentException("destinationDistance should be a positive number!");
+    }
+
+    /**
+     * Returns additional cost based on the fragility of the item
+     * @param isFragile - is item fragile or not
+     * @return calculated cost, zero for a not fragile item
+     */
+    private int getFragileCostIncrease(boolean isFragile) {
+        return isFragile ? 300 : 0;
+    }
 }
