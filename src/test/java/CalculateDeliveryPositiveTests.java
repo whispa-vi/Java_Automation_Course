@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("Delivery Cost Calculation")
 @Feature("Cost Calculation Functionality")
 @DisplayName("Positive cases")
-public class CalculateDeliveryUnitTests {
+public class CalculateDeliveryPositiveTests {
 
     @ParameterizedTest
     @Tag("Positive")
